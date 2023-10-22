@@ -11,7 +11,8 @@ const radar = new RadarPlayer("sample.dat", true);
 
 const stream = radar.getFftDataStream();
 
-stream.on("data", (data) => {
+stream.on("data", (data) => 
+{
     console.log(data.toString());
 });
 
