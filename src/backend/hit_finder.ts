@@ -2,13 +2,12 @@ import { Transform } from "stream";
 import { FftData, HitData } from "./containers";
 import { Hit } from "./interfaces";
 
-export class HitFinder extends Transform
-{
+export class HitFinder extends Transform {
     constructor() {
         super({objectMode: true});
     }
 
-    _transform(chunk: FftData, encoding: any, callback: (arg0: null, arg1: HitData) => void) {
+    _transform(chunk: FftData, encoding: string, callback: (arg0: null, arg1: HitData) => void) {
         const fft = chunk.fft;
 
         const hits: Hit[] = [];
@@ -24,9 +23,11 @@ export class HitFinder extends Transform
 
             if (current > previous) { // start peak
                 peakIndexes = [i];
-            } else if (current == previous) { // existing peak (plateau)
+            }
+            else if (current == previous) { // existing peak (plateau)
                 peakIndexes.push(i);
-            } else if (current < previous && peakIndexes.length > 0) { // end peak
+            }
+            else if (current < previous && peakIndexes.length > 0) { // end peak
                 if (peakIndexes.length > 1) {
                     peakIndexes = [peakIndexes[Math.floor(peakIndexes.length/2)]];
                 }

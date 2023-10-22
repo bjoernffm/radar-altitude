@@ -3,8 +3,7 @@ import { FftDataStream } from "./interfaces";
 import { RadarPlayerFile } from "./RadarPlayerFile";
 import { FftData } from "./containers";
 
-export class RadarPlayer implements FftDataStream
-{
+export class RadarPlayer implements FftDataStream {
     private _fftDataStream: Readable;
     private _file: RadarPlayerFile;
     private _is_playing: boolean = false;
@@ -12,8 +11,7 @@ export class RadarPlayer implements FftDataStream
     private _nextRecord: FftData|null = null;
     private _startTime: number = 0;
 
-    constructor(filePath: string, autoplay: boolean = false)
-    {
+    constructor(filePath: string, autoplay: boolean = false) {
         this._fftDataStream = new Stream.Readable({objectMode: true, read() {}});
         this._file = new RadarPlayerFile(filePath);
 
@@ -44,13 +42,11 @@ export class RadarPlayer implements FftDataStream
         });
     }
 
-    public getFftDataStream(): Readable
-    {
+    public getFftDataStream(): Readable {
         return this._fftDataStream;
     }
 
-    public async play()
-    {
+    public async play() {
         this._currentRecord = await this._file.getCurrentRecord();
         this._nextRecord = await this._file.getNextRecord();
 
@@ -60,19 +56,16 @@ export class RadarPlayer implements FftDataStream
         this._is_playing = true;
     }
 
-    public pause()
-    {
+    public pause() {
         this._is_playing = false;
     }
 
-    public stop()
-    {
+    public stop() {
         this._is_playing = false;
         this.rewind();
     }
 
-    public rewind()
-    {
+    public rewind() {
         this._file.rewind();
     }
 }

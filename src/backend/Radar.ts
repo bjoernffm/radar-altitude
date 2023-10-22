@@ -1,23 +1,20 @@
 import { SerialPort, ReadlineParser } from "serialport";
 import { Readable, Stream } from "stream";
-import { FftData, PhaseData } from "./containers";
+import { FftData } from "./containers";
 import { FftDataStream } from "./interfaces";
 
-export class Radar implements FftDataStream
-{
+export class Radar implements FftDataStream {
     private _device: SerialPort;
     private _currentIValues: number[] = [];
     private _currentQValues: number[] = [];
 
     private _fftDataStream: Readable;
 
-    public getFftDataStream(): Readable
-    {
+    public getFftDataStream(): Readable {
         return this._fftDataStream;
     }
 
-    constructor(devicePath: string)
-    {
+    constructor(devicePath: string) {
         this._device = new SerialPort({
             path: devicePath,
             baudRate: 19200,
@@ -34,8 +31,7 @@ export class Radar implements FftDataStream
         this._fftDataStream = new Stream.Readable({objectMode: true, read() {}});
     }
 
-    private setupDevice()
-    {
+    private setupDevice() {
         this._device.write("uC"); // centimeter as unit
         this._device.write("Od"); // distance data
         this._device.write("P0"); // Max Power
@@ -48,8 +44,7 @@ export class Radar implements FftDataStream
         parser.on("data", (data: string) => this.processData(data));
     }
 
-    private processData(data: string) : void
-    {
+    private processData(data: string) : void {
         if (data.startsWith("{\"FFT\":")) {
             const json = JSON.parse(data) as {"FFT": number[]};
 
@@ -68,10 +63,12 @@ export class Radar implements FftDataStream
 
             //console.log(buffe);
             //this._fftDataStream.push(buffe);
-        } else if (data.startsWith("{\"I\":")) {
+        }
+        else if (data.startsWith("{\"I\":")) {
             const json = JSON.parse(data) as {"I": number[]};
             this._currentIValues = json.I;
-        } else if (data.startsWith("{\"Q\":")) {
+        }
+        else if (data.startsWith("{\"Q\":")) {
             const json = JSON.parse(data) as {"Q": number[]};
             this._currentQValues = json.Q;
             

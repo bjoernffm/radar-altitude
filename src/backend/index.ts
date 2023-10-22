@@ -1,11 +1,10 @@
-import { Radar } from "./Radar";
+//import { Radar } from "./Radar";
 import { RadarPlayer } from "./RadarPlayer";
-import { RadarRecorder } from "./RadarRecorder";
+/*import { RadarRecorder } from "./RadarRecorder";
 import { FftData, HitData } from "./containers";
 import { HitFinder } from "./hit_finder";
 import { HitSelector } from "./hit_selector";
-import { HitToDistance } from "./hit_to_distance";
-const fs = require("fs");
+import { HitToDistance } from "./hit_to_distance";*/
 
 //const radar = new Radar("COM3");
 const radar = new RadarPlayer("sample.dat", true);
