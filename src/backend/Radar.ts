@@ -1,7 +1,7 @@
-import { SerialPort, ReadlineParser } from 'serialport'
-import { Readable, Stream } from 'stream';
-import { FftData, PhaseData } from './containers';
-import { FftDataStream } from './interfaces';
+import { SerialPort, ReadlineParser } from "serialport";
+import { Readable, Stream } from "stream";
+import { FftData, PhaseData } from "./containers";
+import { FftDataStream } from "./interfaces";
 
 export class Radar implements FftDataStream
 {
@@ -23,7 +23,7 @@ export class Radar implements FftDataStream
             baudRate: 19200,
         }, function (err) {
             if (err) {
-              return console.log('Error: ', err.message)
+                return console.log("Error: ", err.message);
             }
         });
         
@@ -36,22 +36,22 @@ export class Radar implements FftDataStream
 
     private setupDevice()
     {
-        this._device.write('uC'); // centimeter as unit
-        this._device.write('Od'); // distance data
-        this._device.write('P0'); // Max Power
-        this._device.write('W0'); // Max Power
-        this._device.write('OF'); // fft data
+        this._device.write("uC"); // centimeter as unit
+        this._device.write("Od"); // distance data
+        this._device.write("P0"); // Max Power
+        this._device.write("W0"); // Max Power
+        this._device.write("OF"); // fft data
         //this._device.write('OR'); // phase data
 
-        const parser = this._device.pipe(new ReadlineParser({ delimiter: '\r\n' }))
+        const parser = this._device.pipe(new ReadlineParser({ delimiter: "\r\n" }));
 
-        parser.on('data', (data: string) => this.processData(data));
+        parser.on("data", (data: string) => this.processData(data));
     }
 
     private processData(data: string) : void
     {
-        if (data.startsWith('{"FFT":')) {
-            let json = JSON.parse(data) as {"FFT": number[]};
+        if (data.startsWith("{\"FFT\":")) {
+            const json = JSON.parse(data) as {"FFT": number[]};
 
             this._fftDataStream.push(new FftData(json.FFT));
 
@@ -68,11 +68,11 @@ export class Radar implements FftDataStream
 
             //console.log(buffe);
             //this._fftDataStream.push(buffe);
-        } else if (data.startsWith('{"I":')) {
-            let json = JSON.parse(data) as {"I": number[]};
+        } else if (data.startsWith("{\"I\":")) {
+            const json = JSON.parse(data) as {"I": number[]};
             this._currentIValues = json.I;
-        } else if (data.startsWith('{"Q":')) {
-            let json = JSON.parse(data) as {"Q": number[]};
+        } else if (data.startsWith("{\"Q\":")) {
+            const json = JSON.parse(data) as {"Q": number[]};
             this._currentQValues = json.Q;
             
             //this._phaseDataStream.push(new PhaseData(this._currentIValues, this._currentQValues))

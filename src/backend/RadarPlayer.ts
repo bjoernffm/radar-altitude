@@ -17,7 +17,7 @@ export class RadarPlayer implements FftDataStream
         this._fftDataStream = new Stream.Readable({objectMode: true, read() {}});
         this._file = new RadarPlayerFile(filePath);
 
-        this._file.addListener('loaded', async () => {
+        this._file.addListener("loaded", async () => {
             if (autoplay == true) {
                 this.play();
             }
@@ -27,10 +27,10 @@ export class RadarPlayer implements FftDataStream
                     return;
                 }
 
-                let timeDelta = this._nextRecord.timestamp - this._currentRecord.timestamp;
+                const timeDelta = this._nextRecord.timestamp - this._currentRecord.timestamp;
 
-                let currentTime = (new Date).getTime();
-                let elapsedTime = currentTime-this._startTime;
+                const currentTime = (new Date).getTime();
+                const elapsedTime = currentTime-this._startTime;
 
                 if (elapsedTime > timeDelta) {
                     //console.log(this._currentRecord.timestamp, timeDelta, elapsedTime);

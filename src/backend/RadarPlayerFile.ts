@@ -1,10 +1,10 @@
-import * as fs from 'fs';
-import * as util from 'util';
-import { FftData } from './containers';
-import { TypedEmitter } from 'tiny-typed-emitter';
+import * as fs from "fs";
+import * as util from "util";
+import { FftData } from "./containers";
+import { TypedEmitter } from "tiny-typed-emitter";
 
 interface RadarFileEvents {
-    'loaded': () => void;
+    "loaded": () => void;
 }
 
 class RadarFile extends TypedEmitter<RadarFileEvents>
@@ -33,13 +33,13 @@ export class RadarPlayerFile extends RadarFile
     {
         super(filePath);
 
-        fs.open(this.filePath, 'r', (error, fileHandle) => {
+        fs.open(this.filePath, "r", (error, fileHandle) => {
             if (error) {
                 throw error;
             }
 
             this._fileHandle = fileHandle;
-            this.emit('loaded');
+            this.emit("loaded");
         });
     }
 
@@ -72,9 +72,9 @@ export class RadarPlayerFile extends RadarFile
         }
 
         const read = util.promisify(fs.read);
-        let buffer = Buffer.alloc(RadarPlayerFile.chunkByteSize);
+        const buffer = Buffer.alloc(RadarPlayerFile.chunkByteSize);
             
-        let result = await read(this._fileHandle, buffer, 0, RadarPlayerFile.chunkByteSize, index * RadarPlayerFile.chunkByteSize);
+        const result = await read(this._fileHandle, buffer, 0, RadarPlayerFile.chunkByteSize, index * RadarPlayerFile.chunkByteSize);
 
         if (result.bytesRead != RadarPlayerFile.chunkByteSize) {
             console.warn("file end reached");

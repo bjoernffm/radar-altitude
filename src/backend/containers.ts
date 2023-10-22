@@ -15,7 +15,7 @@ export class FftData implements DataContainer, BinarySerializable
             this._fft = [];
             this._timestamp = 0;
 
-            let arrayBuffer = value.buffer;
+            const arrayBuffer = value.buffer;
             const view = new DataView(arrayBuffer);
 
             this._timestamp = Number(view.getBigUint64(0));
@@ -94,12 +94,12 @@ export class PhaseData implements DataContainer
 
     public toString(): string
     {
-        return `PhaseData(i[${this.i.length}]=${this.i.join(",").substring(0, 12)}..., q[${this.q.length}]=${this.q.join(",").substring(0, 12)}...)`
+        return `PhaseData(i[${this.i.length}]=${this.i.join(",").substring(0, 12)}..., q[${this.q.length}]=${this.q.join(",").substring(0, 12)}...)`;
     }
 
     public toComplexArray(): number[]
     {
-        let retArray:number[] = [];
+        const retArray:number[] = [];
 
         for(let i = 0; i < this.i.length; i++) {
             retArray.push(this.q[i]);
@@ -127,10 +127,10 @@ export class HitData implements DataContainer
 
     public compare(a: Hit, b: Hit) {
         if (a.value < b.value) {
-          return 1;
+            return 1;
         }
         if (a.value > b.value) {
-          return -1;
+            return -1;
         }
         return 0;
     }
@@ -140,7 +140,7 @@ export class HitData implements DataContainer
         const summary: string[] = this._hits.slice(0, 5).map(hit => {
             return `${hit.value} at ${hit.index}`;
         });
-        return `HitData(hits[${this._hits.length}]=${summary.join(", ")})`
+        return `HitData(hits[${this._hits.length}]=${summary.join(", ")})`;
     }
 }
 

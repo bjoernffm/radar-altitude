@@ -5,14 +5,14 @@ import { FftData, HitData } from "./containers";
 import { HitFinder } from "./hit_finder";
 import { HitSelector } from "./hit_selector";
 import { HitToDistance } from "./hit_to_distance";
-var fs = require('fs');
+const fs = require("fs");
 
 //const radar = new Radar("COM3");
 const radar = new RadarPlayer("sample.dat", true);
 
 const stream = radar.getFftDataStream();
 
-stream.on('data', (data) => {
+stream.on("data", (data) => {
     console.log(data.toString());
 });
 
