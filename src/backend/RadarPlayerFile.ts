@@ -27,7 +27,7 @@ class RadarFile extends TypedEmitter<RadarFileEvents>
 export class RadarPlayerFile extends RadarFile
 {
     private _fileHandle: number|null = null;
-    private _currentIndex: number = 0;    
+    private _currentIndex: number = 0;
 
     constructor(filePath: string)
     {
@@ -41,6 +41,11 @@ export class RadarPlayerFile extends RadarFile
             this._fileHandle = fileHandle;
             this.emit('loaded');
         });
+    }
+
+    public rewind()
+    {
+        this._currentIndex = 0;
     }
 
     public async getPreviousRecord()

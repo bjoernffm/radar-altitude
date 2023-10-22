@@ -8,7 +8,7 @@ import { HitToDistance } from "./hit_to_distance";
 var fs = require('fs');
 
 //const radar = new Radar("COM3");
-const radar = new RadarPlayer("sample.dat");
+const radar = new RadarPlayer("sample.dat", true);
 
 const stream = radar.getFftDataStream();
 
