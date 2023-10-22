@@ -34,7 +34,7 @@
         ],
         "brace-style": [
             "error",
-            "allman"
+            "1tbs"
         ]
     }
 }

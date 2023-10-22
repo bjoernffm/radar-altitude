@@ -7,36 +7,29 @@ interface RadarFileEvents {
     "loaded": () => void;
 }
 
-class RadarFile extends TypedEmitter<RadarFileEvents> 
-{
+class RadarFile extends TypedEmitter<RadarFileEvents> {
     static chunkByteSize = 8 + 512 * 4;
     private _filePath: string;
 
-    constructor(filePath: string) 
-    {
+    constructor(filePath: string) {
         super();
         this._filePath = filePath;
     }
 
-    public get filePath() 
-    {
+    public get filePath() {
         return this._filePath;
     }
 }
 
-export class RadarPlayerFile extends RadarFile 
-{
+export class RadarPlayerFile extends RadarFile {
     private _fileHandle: number|null = null;
     private _currentIndex: number = 0;
 
-    constructor(filePath: string) 
-    {
+    constructor(filePath: string) {
         super(filePath);
 
-        fs.open(this.filePath, "r", (error, fileHandle) => 
-        {
-            if (error) 
-            {
+        fs.open(this.filePath, "r", (error, fileHandle) => {
+            if (error) {
                 throw error;
             }
 
@@ -45,32 +38,26 @@ export class RadarPlayerFile extends RadarFile
         });
     }
 
-    public rewind() 
-    {
+    public rewind() {
         this._currentIndex = 0;
     }
 
-    public async getPreviousRecord() 
-    {
+    public async getPreviousRecord() {
         this._currentIndex--;
         return await this.getRecord(this._currentIndex);
     }
 
-    public async getNextRecord() 
-    {
+    public async getNextRecord() {
         this._currentIndex++;
         return await this.getRecord(this._currentIndex);
     }
 
-    public async getCurrentRecord() 
-    {
+    public async getCurrentRecord() {
         return await this.getRecord(this._currentIndex);
     }
 
-    private async getRecord(index: number) 
-    {
-        if (this._fileHandle == null) 
-        {
+    private async getRecord(index: number) {
+        if (this._fileHandle == null) {
             throw Error("No active file handle accessible");
         }
 
@@ -79,9 +66,7 @@ export class RadarPlayerFile extends RadarFile
             
         const result = await read(this._fileHandle, buffer, 0, RadarPlayerFile.chunkByteSize, index * RadarPlayerFile.chunkByteSize);
 
-        if (result.bytesRead != RadarPlayerFile.chunkByteSize) 
-        {
-            console.warn("file end reached");
+        if (result.bytesRead != RadarPlayerFile.chunkByteSize) {
             throw Error("EOF reached");
         }
 

@@ -5,7 +5,8 @@ export interface FftDataStream
     getFftDataStream(): Readable
 }
 
-export interface Hit {
+export interface Hit
+{
     index: number;
     value: number
 }

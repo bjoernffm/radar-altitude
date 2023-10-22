@@ -2,9 +2,14 @@ import { Readable, Stream } from "stream";
 import { FftDataStream } from "./interfaces";
 import { RadarPlayerFile } from "./RadarPlayerFile";
 import { FftData } from "./containers";
+import { TypedEmitter } from "tiny-typed-emitter";
 
-export class RadarPlayer implements FftDataStream 
-{
+interface RadarPlayerEvents {
+    "loaded": () => void;
+    "ended": () => void;
+}
+
+export class RadarPlayer extends TypedEmitter<RadarPlayerEvents> implements FftDataStream {
     private _fftDataStream: Readable;
     private _file: RadarPlayerFile;
     private _is_playing: boolean = false;
@@ -12,23 +17,21 @@ export class RadarPlayer implements FftDataStream
     private _nextRecord: FftData|null = null;
     private _startTime: number = 0;
 
-    constructor(filePath: string, autoplay: boolean = false) 
-    {
-        this._fftDataStream = new Stream.Readable({objectMode: true, read() 
-        {}});
+    constructor(filePath: string, autoplay: boolean = false) {
+        super();
+
+        this._fftDataStream = new Stream.Readable({objectMode: true, read() {}});
         this._file = new RadarPlayerFile(filePath);
 
-        this._file.addListener("loaded", async () => 
-        {
-            if (autoplay == true) 
-            {
+        this._file.addListener("loaded", async () => {
+            this.emit("loaded");
+
+            if (autoplay == true) {
                 this.play();
             }
 
-            setInterval(async () => 
-            {
-                if (this._is_playing == false || this._currentRecord == null || this._nextRecord == null) 
-                {
+            setInterval(async () => {
+                if (this._is_playing == false || this._currentRecord == null || this._nextRecord == null) {
                     return;
                 }
 
@@ -37,11 +40,15 @@ export class RadarPlayer implements FftDataStream
                 const currentTime = (new Date).getTime();
                 const elapsedTime = currentTime-this._startTime;
 
-                if (elapsedTime > timeDelta) 
-                {
-                    //console.log(this._currentRecord.timestamp, timeDelta, elapsedTime);
+                if (elapsedTime > timeDelta) {
                     this._currentRecord = this._nextRecord;
-                    this._nextRecord = await this._file.getNextRecord();
+
+                    try {
+                        this._nextRecord = await this._file.getNextRecord();
+                    } catch(error) {
+                        this.stop();
+                    }
+                    
                     this._startTime = (new Date).getTime();
 
                     this._fftDataStream.push(this._currentRecord);
@@ -50,13 +57,11 @@ export class RadarPlayer implements FftDataStream
         });
     }
 
-    public getFftDataStream(): Readable 
-    {
+    public getFftDataStream(): Readable {
         return this._fftDataStream;
     }
 
-    public async play() 
-    {
+    public async play() {
         this._currentRecord = await this._file.getCurrentRecord();
         this._nextRecord = await this._file.getNextRecord();
 
@@ -66,19 +71,17 @@ export class RadarPlayer implements FftDataStream
         this._is_playing = true;
     }
 
-    public pause() 
-    {
+    public pause() {
         this._is_playing = false;
     }
 
-    public stop() 
-    {
+    public stop() {
+        this.emit("ended");
         this._is_playing = false;
         this.rewind();
     }
 
-    public rewind() 
-    {
+    public rewind() {
         this._file.rewind();
     }
 }
