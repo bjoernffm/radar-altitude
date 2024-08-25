@@ -7,7 +7,7 @@ import { HitSelector } from "./hit_selector";
 import { HitToDistance } from "./hit_to_distance";
 
 //const radar = new Radar("COM3");
-const radar = new RadarPlayer("sample.dat", true);
+const radar = new RadarPlayer("sample.dat", {autoplay: true});
 
 const stream = radar.getFftDataStream();
 

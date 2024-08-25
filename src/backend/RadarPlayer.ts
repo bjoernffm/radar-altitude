@@ -9,6 +9,10 @@ interface RadarPlayerEvents {
     "ended": () => void;
 }
 
+export interface RadarPlayerOptions {
+    autoplay?: boolean
+}
+
 export class RadarPlayer extends TypedEmitter<RadarPlayerEvents> implements FftDataStream {
     private _fftDataStream: Readable;
     private _file: RadarPlayerFile;
@@ -17,7 +21,7 @@ export class RadarPlayer extends TypedEmitter<RadarPlayerEvents> implements FftD
     private _nextRecord: FftData|null = null;
     private _startTime: number = 0;
 
-    constructor(filePath: string, autoplay: boolean = false) {
+    constructor(filePath: string, options?: RadarPlayerOptions) {
         super();
 
         this._fftDataStream = new Stream.Readable({objectMode: true, read() {}});
@@ -26,7 +30,7 @@ export class RadarPlayer extends TypedEmitter<RadarPlayerEvents> implements FftD
         this._file.addListener("loaded", async () => {
             this.emit("loaded");
 
-            if (autoplay == true) {
+            if (options?.autoplay == true) {
                 this.play();
             }
 

@@ -7,7 +7,7 @@ export interface FftDataStream
 
 export interface Hit
 {
-    index: number;
+    index: number
     value: number
 }
 
