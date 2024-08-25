@@ -8,24 +8,13 @@ export class FftData implements DataContainer, BinarySerializable {
     /**
      * @param value Can be an array of 512 numbers or a buffer if serialized binary
      */
-    public constructor(value: number[]|Buffer) {
-        if(Buffer.isBuffer(value)) {
-            this._fft = [];
-            this._timestamp = 0;
+    public constructor(fft: number[], timestamp?: number) {
+        this._fft = fft;
 
-            const arrayBuffer = value.buffer;
-            const view = new DataView(arrayBuffer);
-
-            this._timestamp = Number(view.getBigUint64(0));
-
-            for(let i = 0; i < 512; i++) {
-                this._fft.push(view.getFloat32((i*4)+8));
-            }
-        } else if(Array.isArray(value) && value.length == 512) {
-            this._fft = value;
-            this._timestamp = (new Date()).getTime();
+        if(timestamp) {
+            this._timestamp = timestamp;            
         } else {
-            throw new Error("Bad value given.");
+            this._timestamp = (new Date()).getTime();
         }
     }
 
